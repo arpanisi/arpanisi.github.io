@@ -1,2 +1,2 @@
 # MyWebpage
-https://arpanisi.github.io/ArpanMukherjee/
+https://arpanisi.github.io/

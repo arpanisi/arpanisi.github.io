@@ -1,5 +1,41 @@
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
+import outboundLinksYaml from "../content/outbound-links.yaml?raw";
+
+type OutboundLinkKey = "research" | "systems" | "theater";
+
+const parseOutboundLinks = (yaml: string): Record<OutboundLinkKey, string> => {
+  const links: Record<OutboundLinkKey, string> = {
+    research: "#",
+    systems: "#",
+    theater: "#",
+  };
+
+  yaml.split("\n").forEach((line) => {
+    const trimmed = line.trim();
+
+    if (!trimmed || trimmed.startsWith("#")) {
+      return;
+    }
+
+    const match = trimmed.match(/^(research|systems|theater):\s*(.*)$/);
+
+    if (!match) {
+      return;
+    }
+
+    const key = match[1] as OutboundLinkKey;
+    const value = match[2].trim().replace(/^["']|["']$/g, "");
+
+    if (value) {
+      links[key] = value;
+    }
+  });
+
+  return links;
+};
+
+const outboundLinks = parseOutboundLinks(outboundLinksYaml);
 
 export default function App() {
   const [isDark, setIsDark] = useState(false);
@@ -26,6 +62,8 @@ export default function App() {
     viewport: { once: true, margin: "-100px" },
     transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] }
   };
+
+  const quietOutboundLink = "inline-block mt-14 text-sm tracking-[0.18em] opacity-40 hover:opacity-70 hover:underline underline-offset-4 transition-opacity duration-300";
 
   return (
     <div className="min-h-screen bg-background text-foreground relative">
@@ -266,6 +304,15 @@ Focused on making LLM outputs verifiable and actionable under sparse, high-uncer
               </div>
             </div>
           </div>
+          <a
+            href={outboundLinks.research}
+            target="_blank"
+            rel="noreferrer"
+            className={quietOutboundLink}
+            style={{ fontFamily: "'IBM Plex Mono', monospace" }}
+          >
+            Follow the papers →
+          </a>
         </motion.div>
       </section>
 
@@ -321,6 +368,15 @@ Focused on making LLM outputs verifiable and actionable under sparse, high-uncer
               </div>
             </div>
           </div>
+          <a
+            href={outboundLinks.systems}
+            target="_blank"
+            rel="noreferrer"
+            className={quietOutboundLink}
+            style={{ fontFamily: "'IBM Plex Mono', monospace" }}
+          >
+            Browse the code →
+          </a>
         </motion.div>
       </section>
 
@@ -376,6 +432,15 @@ Focused on making LLM outputs verifiable and actionable under sparse, high-uncer
               </div>
             </div>
           </div>
+          <a
+            href={outboundLinks.theater}
+            target="_blank"
+            rel="noreferrer"
+            className={quietOutboundLink}
+            style={{ fontFamily: "'IBM Plex Mono', monospace" }}
+          >
+            See it on stage →
+          </a>
         </motion.div>
       </section>
 

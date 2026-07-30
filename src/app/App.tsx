@@ -2,13 +2,22 @@ import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 import outboundLinksYaml from "../content/outbound-links.yaml?raw";
 
-type OutboundLinkKey = "research" | "systems" | "theater";
+type OutboundLinkKey =
+  | "sftGrpoRepo"
+  | "pfasAriaRepo"
+  | "contactEmail"
+  | "contactLinkedin"
+  | "contactGithub"
+  | "contactScholar";
 
 const parseOutboundLinks = (yaml: string): Record<OutboundLinkKey, string> => {
   const links: Record<OutboundLinkKey, string> = {
-    research: "#",
-    systems: "#",
-    theater: "#",
+    sftGrpoRepo: "#",
+    pfasAriaRepo: "#",
+    contactEmail: "#",
+    contactLinkedin: "#",
+    contactGithub: "#",
+    contactScholar: "#",
   };
 
   yaml.split("\n").forEach((line) => {
@@ -18,7 +27,7 @@ const parseOutboundLinks = (yaml: string): Record<OutboundLinkKey, string> => {
       return;
     }
 
-    const match = trimmed.match(/^(research|systems|theater):\s*(.*)$/);
+    const match = trimmed.match(/^([a-zA-Z]+):\s*(.*)$/);
 
     if (!match) {
       return;
@@ -27,7 +36,7 @@ const parseOutboundLinks = (yaml: string): Record<OutboundLinkKey, string> => {
     const key = match[1] as OutboundLinkKey;
     const value = match[2].trim().replace(/^["']|["']$/g, "");
 
-    if (value) {
+    if (value && key in links) {
       links[key] = value;
     }
   });
@@ -96,24 +105,6 @@ export default function App() {
             RESEARCH
             <span className="absolute bottom-0 left-0 w-0 h-px bg-foreground opacity-0 group-hover:w-full group-hover:opacity-40 transition-all duration-300"></span>
           </a>
-          <a
-            href="#systems"
-            onClick={(e) => scrollToSection(e, 'systems')}
-            className="text-xs tracking-[0.2em] opacity-40 hover:opacity-70 transition-opacity duration-300 relative group"
-            style={{ fontFamily: "'IBM Plex Mono', monospace" }}
-          >
-            SYSTEMS
-            <span className="absolute bottom-0 left-0 w-0 h-px bg-foreground opacity-0 group-hover:w-full group-hover:opacity-40 transition-all duration-300"></span>
-          </a>
-          <a
-            href="#theater"
-            onClick={(e) => scrollToSection(e, 'theater')}
-            className="text-xs tracking-[0.2em] opacity-40 hover:opacity-70 transition-opacity duration-300 relative group"
-            style={{ fontFamily: "'IBM Plex Mono', monospace" }}
-          >
-            THEATER
-            <span className="absolute bottom-0 left-0 w-0 h-px bg-foreground opacity-0 group-hover:w-full group-hover:opacity-40 transition-all duration-300"></span>
-          </a>
         </motion.nav>
       </header>
 
@@ -131,16 +122,16 @@ export default function App() {
           transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
         >
           <div className="mb-6 text-xs tracking-widest opacity-40" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>
-            INT. SYSTEMS — CONTINUOUS
+            RESEARCH MISSION
           </div>
           <h1
             className="text-4xl md:text-5xl lg:text-6xl leading-[1.2] mb-8"
             style={{ fontFamily: "'Crimson Pro', serif", fontWeight: 400 }}
           >
-            I build systems. I direct stories. I try to understand how complex things behave.
+            AI models are getting more capable faster than anyone is getting better at knowing when to trust them.
           </h1>
           <div className="text-sm opacity-30 border-l-2 border-foreground/20 pl-4 italic inline-block" style={{ fontFamily: "'Courier Prime', monospace" }}>
-            (A pause. Something shifts.)
+            Post-training · Mechanistic Interpretability · Long-Horizon Agents
           </div>
         </motion.div>
       </section>
@@ -157,21 +148,21 @@ export default function App() {
         >
           {/* Marginal note */}
           <div className="hidden lg:block absolute -left-32 top-4 w-24 text-xs leading-relaxed opacity-40" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>
-            cf. Bateson on form & pattern
+            held-out benchmark, real results
           </div>
 
           <p className="text-xl md:text-2xl leading-relaxed mb-6" style={{ fontFamily: "'Crimson Pro', serif", fontWeight: 300 }}>
-            There's a common thread between designing a computational model, staging a play, and building decision infrastructure: they all require <span className="border-b border-foreground/30">translating complexity into form</span>. Whether I'm working with uncertainty in machine learning systems, directing actors through a script, or architecting platforms that help organizations think more clearly, I'm always asking the same question—
+            My research closes the gap by <span className="border-b border-foreground/30">post-training language models on scarce, high-stakes, structured-judgment tasks</span>, then proving mechanistically, not just statistically, that the training changed the model for the right reasons, extending toward long-horizon agentic reasoning.
           </p>
 
           <p className="text-xl md:text-2xl leading-relaxed italic opacity-70" style={{ fontFamily: "'Courier Prime', monospace" }}>
-            how do we make intricate systems comprehensible without flattening them?
+            The best fine-tuned checkpoint reached 100% valid structured output on held-out data, and an 8B model outperformed a 32B model from the same family. Parameter count wasn't the deciding factor, the training was.
           </p>
 
           {/* Annotation */}
           <div className="mt-6 text-xs opacity-40 flex items-start gap-2" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>
             <span>→</span>
-            <span>This question recurs. It's structural, not stylistic.</span>
+            <span>That result held up under causal testing, not just a benchmark score.</span>
           </div>
         </motion.div>
       </section>
@@ -191,11 +182,11 @@ export default function App() {
           </div>
 
           <p className="text-3xl md:text-4xl lg:text-5xl leading-[1.3]" style={{ fontFamily: "'Crimson Pro', serif", fontWeight: 400 }}>
-            The goal isn't simplification. It's legibility. Complex systems deserve to be understood on their own terms.
+            A model that scores better without a traceable internal cause is a model you're trusting on faith. That's not good enough.
           </p>
 
           <div className="mt-8 text-xs opacity-30 italic" style={{ fontFamily: "'Courier Prime', monospace" }}>
-            (Let this sit.)
+            A causal evidence-deletion test changed 47% of this model's assessments, versus 0% for non-evidence controls.
           </div>
         </motion.div>
       </section>
@@ -218,16 +209,16 @@ export default function App() {
           </div>
 
           <p className="text-xl md:text-2xl leading-relaxed mb-8" style={{ fontFamily: "'Crimson Pro', serif", fontWeight: 300 }}>
-            Right now, I'm working on decision systems that handle uncertainty without pretending it doesn't exist. This means building tools for organizations navigating ambiguous situations—where the stakes are real, the data is incomplete, and linear thinking breaks down.
+            Right now: post-training methodology for scarce-data, high-stakes tasks, paired with a standing mechanistic-interpretability verification layer that checks the work, extending toward long-horizon agentic reasoning.
           </p>
 
           {/* Handwritten-style note */}
           <div className="pl-6 border-l-2 border-foreground/20 text-base opacity-60 leading-relaxed" style={{ fontFamily: "'Courier Prime', monospace" }}>
-            The work sits at the intersection of computational modeling, cognitive science, and real-world implementation.
+            The work sits at the intersection of post-training, interpretability, and long-horizon agentic reasoning, treated as one problem, not three.
           </div>
 
           <div className="mt-4 text-xs opacity-30" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>
-            [See: lab notebook vol. 7, pp. 142-189]
+            [100% valid structured output · 8B outperforms 32B · 1.66× representation shift · 47% evidence-deletion effect]
           </div>
         </motion.div>
       </section>
@@ -255,15 +246,24 @@ export default function App() {
                 <span className="text-xs opacity-30 mt-1" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>[1]</span>
                 <div className="flex-1">
                   <h3 className="text-2xl md:text-3xl mb-2" style={{ fontFamily: "'Crimson Pro', serif", fontWeight: 500 }}>
-                    PFAS / Chemical Remediation
+                    Post-Training for Structured Expert Judgment
                   </h3>
                   <p className="text-lg mb-1 opacity-70 leading-relaxed" style={{ fontFamily: "'Crimson Pro', serif", fontWeight: 300 }}>
-                    Predictive Modeling for Chemical Degradation Pathways
+                    Completion-Masked SFT + Profile-Conditioned GRPO, Verified with Mechanistic Interpretability
                   </p>
                   <p className="text-sm opacity-50 italic mt-3" style={{ fontFamily: "'Courier Prime', monospace" }}>
-                    Built models to predict degradation behavior across large chemical spaces using sparse experimental and literature-derived data
-Dyadic modeling enabled learning interactions between compounds and conditions, not just isolated predictions
+                    Fine-tuned an 8B open-weight model to reach 100% valid structured output on a held-out expert-assessment benchmark, outperforming a 32B model from the same family
+Verified with a shared, fixed-basis sparse autoencoder reused across every checkpoint: evidence-deletion and direct latent edits changed 47% and 41% of structured assessments, versus 0% for non-evidence controls
                   </p>
+                  <a
+                    href={outboundLinks.sftGrpoRepo}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-block mt-4 text-xs tracking-[0.1em] opacity-50 hover:opacity-80 hover:underline underline-offset-4 transition-opacity duration-300"
+                    style={{ fontFamily: "'IBM Plex Mono', monospace" }}
+                  >
+                    View the code →
+                  </a>
                 </div>
               </div>
             </div>
@@ -273,178 +273,32 @@ Dyadic modeling enabled learning interactions between compounds and conditions, 
                 <span className="text-xs opacity-30 mt-1" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>[2]</span>
                 <div className="flex-1">
                   <h3 className="text-2xl md:text-3xl mb-2" style={{ fontFamily: "'Crimson Pro', serif", fontWeight: 500 }}>
-                    AI-Guided Materials Discovery
+                    Evidence-Grounded Retrieval for Unstructured Data
                   </h3>
                   <p className="text-lg mb-1 opacity-70 leading-relaxed" style={{ fontFamily: "'Crimson Pro', serif", fontWeight: 300 }}>
-                    Physics-Informed Feature Engineering for Materials Prediction
+                    Keeping a Language Model Strictly Downstream of Computed Evidence
                   </p>
                   <p className="text-sm opacity-50 italic mt-3" style={{ fontFamily: "'Courier Prime', monospace" }}>
-                    Designed descriptor systems grounded in inorganic physics to improve prediction under low-data regimes
-Structured representations significantly improved generalization compared to raw composition-based models
+                    A retrieval and scoring pipeline that screens thousands of candidate hypotheses per run, ranks them by statistical fit and literature similarity, and only then lets a language model explain what's already been computed — it explains evidence, it doesn't generate it
+The system's own most important finding: semantic similarity is not the same as evidence support
                   </p>
-                </div>
-              </div>
-            </div>
-
-            <div className="relative pt-6 border-t border-foreground/10">
-              <div className="flex gap-6">
-                <span className="text-xs opacity-30 mt-1" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>[3]</span>
-                <div className="flex-1">
-                  <h3 className="text-2xl md:text-3xl mb-2" style={{ fontFamily: "'Crimson Pro', serif", fontWeight: 500 }}>
-                    LLM-Assisted Decision Systems for Scientific Discovery
-                  </h3>
-                  <p className="text-lg mb-1 opacity-70 leading-relaxed" style={{ fontFamily: "'Crimson Pro', serif", fontWeight: 300 }}>
-                    LLM-Integrated Decision Pipelines for Noisy Scientific Data under Distribution Shift
-                  </p>
-                  <p className="text-sm opacity-50 italic mt-3" style={{ fontFamily: "'Courier Prime', monospace" }}>
-                    Developed pipelines where LLMs extract structured signals from literature and interface with predictive models for decision-making
-Focused on making LLM outputs verifiable and actionable under sparse, high-uncertainty conditions
-                  </p>
+                  <a
+                    href={outboundLinks.pfasAriaRepo}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-block mt-4 text-xs tracking-[0.1em] opacity-50 hover:opacity-80 hover:underline underline-offset-4 transition-opacity duration-300"
+                    style={{ fontFamily: "'IBM Plex Mono', monospace" }}
+                  >
+                    View the code →
+                  </a>
                 </div>
               </div>
             </div>
           </div>
-          <a
-            href={outboundLinks.research}
-            target="_blank"
-            rel="noreferrer"
-            className={quietOutboundLink}
-            style={{ fontFamily: "'IBM Plex Mono', monospace" }}
-          >
-            Follow the papers →
-          </a>
         </motion.div>
       </section>
 
-      {/* Systems Section */}
-      <section id="systems" className="py-24 px-8 md:px-16 lg:px-24 relative border-t border-foreground/10">
-        <div className="absolute left-4 md:left-8 top-32 text-xs opacity-30" style={{ fontFamily: "'IBM Plex Mono', monospace", writingMode: "vertical-rl", transform: "rotate(180deg)" }}>
-          SYSTEMS
-        </div>
-
-        <motion.div
-          className="max-w-3xl ml-0 md:ml-12"
-          {...fadeInUp}
-        >
-          <div className="flex items-baseline gap-3 mb-12">
-            <span className="text-xs opacity-40" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>§4</span>
-            <h2 className="text-sm tracking-widest uppercase opacity-60" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>
-              Systems
-            </h2>
-          </div>
-
-          <div className="space-y-12">
-            <div className="relative">
-              <div className="flex gap-6">
-                <span className="text-xs opacity-30 mt-1" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>[1]</span>
-                <div className="flex-1">
-                  <h3 className="text-2xl md:text-3xl mb-2" style={{ fontFamily: "'Crimson Pro', serif", fontWeight: 500 }}>
-                    Climate Adaptation Decision Platform
-                  </h3>
-                  <p className="text-lg mb-1 opacity-70 leading-relaxed" style={{ fontFamily: "'Crimson Pro', serif", fontWeight: 300 }}>
-                    Autonomous Research Intelligence Agent for PFAS Degradation Analysis
-                  </p>
-                  <p className="text-sm opacity-50 italic mt-3" style={{ fontFamily: "'Courier Prime', monospace" }}>
-                    Extract, structure, and evaluate ~2000 candidate pathways with AI-powered evidence grounding in literature
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div className="relative pt-6 border-t border-foreground/10">
-              <div className="flex gap-6">
-                <span className="text-xs opacity-30 mt-1" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>[2]</span>
-                <div className="flex-1">
-                  <h3 className="text-2xl md:text-3xl mb-2" style={{ fontFamily: "'Crimson Pro', serif", fontWeight: 500 }}>
-                    Real-Time Process Monitoring Pipeline
-                  </h3>
-                  <p className="text-lg mb-1 opacity-70 leading-relaxed" style={{ fontFamily: "'Crimson Pro', serif", fontWeight: 300 }}>
-                    Streaming data system for identifying outliers in sensor networks
-                  </p>
-                  <p className="text-sm opacity-50 italic mt-3" style={{ fontFamily: "'Courier Prime', monospace" }}>
-                    Catches failures 40 minutes earlier than threshold-based alerts
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-          <a
-            href={outboundLinks.systems}
-            target="_blank"
-            rel="noreferrer"
-            className={quietOutboundLink}
-            style={{ fontFamily: "'IBM Plex Mono', monospace" }}
-          >
-            Browse the code →
-          </a>
-        </motion.div>
-      </section>
-
-      {/* Theater Section */}
-      <section id="theater" className="py-24 px-8 md:px-16 lg:px-24 relative border-t border-foreground/10">
-        <div className="absolute left-4 md:left-8 top-32 text-xs opacity-30" style={{ fontFamily: "'IBM Plex Mono', monospace", writingMode: "vertical-rl", transform: "rotate(180deg)" }}>
-          THEATER
-        </div>
-
-        <motion.div
-          className="max-w-3xl ml-0 md:ml-12"
-          {...fadeInUp}
-        >
-          <div className="flex items-baseline gap-3 mb-12">
-            <span className="text-xs opacity-40" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>§5</span>
-            <h2 className="text-sm tracking-widest uppercase opacity-60" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>
-              Theater
-            </h2>
-          </div>
-
-          <div className="space-y-12">
-            <div className="relative">
-              <div className="flex gap-6">
-                <span className="text-xs opacity-30 mt-1" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>[1]</span>
-                <div className="flex-1">
-                  <h3 className="text-3xl md:text-4xl mb-3 italic" style={{ fontFamily: "'Crimson Pro', serif", fontWeight: 400 }}>
-                    Bhooter Bhabishyat (2019)
-                  </h3>
-                  <p className="text-lg mb-2 opacity-70 leading-relaxed" style={{ fontFamily: "'Crimson Pro', serif", fontWeight: 300 }}>
-                    Ghosts refuse to stay buried. Histories refuse to stay silent
-                  </p>
-                  <p className="text-base opacity-60 leading-relaxed" style={{ fontFamily: "'Courier Prime', monospace" }}>
-                    This stage adaptation of Bhooter Bhabishyat transformed the cult Bengali film into a live ensemble experience—where humor, haunting, and political satire unfolded inside a decaying mansion crowded with the dead. Each ghost carried the residue of a different era, turning comedy into a confrontation with memory, displacement, and cultural erasure. The recorded production later found an unexpected second life online, reaching more than 115,000 viewers on YouTube.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div className="relative pt-6 border-t border-foreground/10">
-              <div className="flex gap-6">
-                <span className="text-xs opacity-30 mt-1" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>[2]</span>
-                <div className="flex-1">
-                  <h3 className="text-3xl md:text-4xl mb-3 italic" style={{ fontFamily: "'Crimson Pro', serif", fontWeight: 400 }}>
-                    New Royal Kissa (2025)
-                  </h3>
-                  <p className="text-lg mb-2 opacity-70 leading-relaxed" style={{ fontFamily: "'Crimson Pro', serif", fontWeight: 300 }}>
-                    A kingdom built on prediction begins to mistake probability for destiny
-                  </p>
-                  <p className="text-base opacity-60 leading-relaxed" style={{ fontFamily: "'Courier Prime', monospace" }}>
-                    In New Royal Kissa, a jubilant king erupts into celebration after an AI system forecasts his inevitable Nobel Prize victory. But as the court spirals deeper into spectacle, vanity, and algorithmic devotion, certainty itself begins to fracture. The machine was hallucinating. The king was too. What unfolds is a political satire about power, technological faith, and the dangerous human need to hear prophecy disguised as data.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-          <a
-            href={outboundLinks.theater}
-            target="_blank"
-            rel="noreferrer"
-            className={quietOutboundLink}
-            style={{ fontFamily: "'IBM Plex Mono', monospace" }}
-          >
-            See it on stage →
-          </a>
-        </motion.div>
-      </section>
-
-      {/* Closing Section - Script Exit */}
+      {/* Closing Section */}
       <section className="py-32 px-8 md:px-16 lg:px-24 min-h-[60vh] flex items-center relative border-t border-foreground/10">
         <div className="absolute left-4 md:left-8 top-32 text-xs opacity-30" style={{ fontFamily: "'IBM Plex Mono', monospace", writingMode: "vertical-rl", transform: "rotate(180deg)" }}>
           CLOSING
@@ -454,12 +308,41 @@ Focused on making LLM outputs verifiable and actionable under sparse, high-uncer
           className="max-w-2xl ml-0 md:ml-12"
           {...fadeInUp}
         >
-          <p className="text-xl md:text-2xl leading-relaxed mb-6" style={{ fontFamily: "'Crimson Pro', serif", fontWeight: 300 }}>
-            If you're working on something that involves navigating complexity—whether that's building systems, telling stories, or trying to understand how things actually work—I'd be curious to hear about it.
+          <p className="text-xl md:text-2xl leading-relaxed mb-10" style={{ fontFamily: "'Crimson Pro', serif", fontWeight: 300 }}>
+            If you're working on post-training, interpretability, or long-horizon agentic systems, and want to see the actual results, not just a benchmark score, I'd be glad to talk.
           </p>
 
-          <div className="mt-8 text-sm opacity-30 italic" style={{ fontFamily: "'Courier Prime', monospace" }}>
-            (The conversation continues elsewhere.)
+          <div className="flex flex-wrap gap-x-8 gap-y-3" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>
+            <a
+              href={outboundLinks.contactEmail}
+              className="text-sm tracking-wide opacity-60 hover:opacity-100 hover:underline underline-offset-4 transition-opacity duration-300"
+            >
+              Email
+            </a>
+            <a
+              href={outboundLinks.contactLinkedin}
+              target="_blank"
+              rel="noreferrer"
+              className="text-sm tracking-wide opacity-60 hover:opacity-100 hover:underline underline-offset-4 transition-opacity duration-300"
+            >
+              LinkedIn
+            </a>
+            <a
+              href={outboundLinks.contactGithub}
+              target="_blank"
+              rel="noreferrer"
+              className="text-sm tracking-wide opacity-60 hover:opacity-100 hover:underline underline-offset-4 transition-opacity duration-300"
+            >
+              GitHub
+            </a>
+            <a
+              href={outboundLinks.contactScholar}
+              target="_blank"
+              rel="noreferrer"
+              className="text-sm tracking-wide opacity-60 hover:opacity-100 hover:underline underline-offset-4 transition-opacity duration-300"
+            >
+              Scholar
+            </a>
           </div>
 
           <div className="mt-12 text-xs opacity-20" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>
